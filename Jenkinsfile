@@ -29,14 +29,7 @@ pipeline {
                 }
             }
         }
-        
-        stage('commit version update') {
-            steps {
-                script {
-                    gitCommit()
-                }
-            }
-        }
+
         stage('deploy to EC2') {
             steps {
                 script {
@@ -48,6 +41,14 @@ pipeline {
                        sh "scp -o StrictHostKeyChecking=no docker-compose.yaml ${ec2Instance}:/home/ec2-user"
                        sh "ssh -o StrictHostKeyChecking=no ${ec2Instance} ${shellCmd}"
                    }
+                }
+            }
+        }
+        
+        stage('commit version update') {
+            steps {
+                script {
+                    gitCommit()
                 }
             }
         }
