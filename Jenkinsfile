@@ -7,11 +7,16 @@ pipeline {
     }
     stages {
         stage('increment version') {
+            when {
+                expression {
+                    return env.GIT_BRANCH == "master"
+            }
             steps {
                 script {
                     incrementVersion()
                 }
             }
+        }
         }
         
         stage('run tests') {
@@ -23,6 +28,12 @@ pipeline {
         }
         
         stage('Build and Push docker image') {
+            when {
+                expression {
+                    return env.GIT_BRANCH == "master"
+                }
+            }
+
             steps {
                 script {
                     dockerBuild()
@@ -31,6 +42,12 @@ pipeline {
         }
 
         stage('deploy to EC2') {
+            when {
+                expression {
+                    return env.GIT_BRANCH == "master"
+                }
+            }
+
             steps {
                 script {
                    def shellCmd = "bash ./serverCmds.sh ${IMAGE_NAME}"
@@ -46,6 +63,12 @@ pipeline {
         }
         
         stage('commit version update') {
+            when {
+                expression {
+                    return env.GIT_BRANCH == "master"
+                }
+            }
+
             steps {
                 script {
                         withCredentials([usernamePassword(credentialsId: 'github-credentials', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
