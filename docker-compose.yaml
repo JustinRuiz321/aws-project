@@ -1,6 +1,6 @@
 
 services:
   bootcamp-training:
-    image: ${IMAGE}
+    image: jruiz321/bootcamp-training:${IMAGE}
     ports:
       - 3000:3000
