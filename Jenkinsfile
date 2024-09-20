@@ -48,7 +48,13 @@ pipeline {
         stage('commit version update') {
             steps {
                 script {
-                    gitCommit()
+                        withCredentials([usernamePassword(credentialsId: 'github-credentials', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+                            sh 'git config --global user.email "jenkins@me.com"'
+                            sh 'git config --global user.name "jenkins"'
+                            sh "git remote set-url origin https://$USER:$PASS@github.com/JustinRuiz321/aws-project.git"
+                            sh 'git add .'
+                            sh 'git commit -m "ci: version bump"'
+                            sh 'git push origin HEAD:main'
                 }
             }
         }
